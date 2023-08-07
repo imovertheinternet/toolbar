@@ -13,30 +13,17 @@ fn greet(name: &str) -> String {
 fn my_first_command() -> String {
     println!("This message is inside the terminal");
     return format!("Returns a string");
-    // return "HELLO2";
 }
-
-// #[tauri::command]
-// fn err_handling_v1() -> Result<String, String> {
-//     // return Err("This is an error.");
-//     // return Ok("this worked!");
-//      // If something fails
-//   Err("This failed!".into());
-//   // If it worked
-// //   Ok("This worked!".into())
-// }
-
-// #[tauri::command]
-// fn my_custom_command() -> Result<String, String> {
-//   // If something fails
-//   Err("This failed!".into())
-//   // If it worked
-//   Ok("This worked!".into())
-// }
 
 fn main() {
     let week_of_year = Local::now().iso_week().week();
     let mut woy_payload = "Week Of Year: ".to_string();
+
+    //TODO: will need to look into Arc and atomic integers. I think that allows me to have a constantly changing variable 
+    // shared between threads.
+    
+    // let current_second_of_year = Local::now().timestamp_millis();
+    // println!("second {}", current_second_of_year.to_string());
 
     //"&" Borrows from the inital WOY varaible. After flow control chapter itll talk about ownership/borrowing.
     woy_payload.push_str(&week_of_year.to_string());
