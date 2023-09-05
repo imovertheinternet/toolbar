@@ -1,20 +1,11 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-// use std::os::unix::thread;
 use chrono::{Datelike, Local};
-
-
 use std::thread;
-
-
-
-
 use sysinfo::{System, SystemExt};
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, SystemTraySubmenu};
 mod channel_test;
 mod arc_test;
-
-
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -68,7 +59,8 @@ fn menu_conrad() -> SystemTraySubmenu {
 fn main() {
     //TODO: This works but blocks the main thread...
     // channel_test::init();
-
+    //TODO: This is busted
+    // arc_test::init();
 
     let hide = CustomMenuItem::new("hide".to_string(), "Hide");
     let tray_menu = SystemTrayMenu::new()

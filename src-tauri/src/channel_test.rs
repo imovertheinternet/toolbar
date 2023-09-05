@@ -5,11 +5,6 @@ use std::{
 };
 use std::sync::mpsc;
 use std::sync::mpsc::Receiver;
-// use std::sync::{mpsc, Receiver};
-// use std::{sync::Arc, thread};
-
-
-
 
 fn start_recv_thread(rx: &Receiver<i32>) -> i32 {
     rx.recv().unwrap()

@@ -4,7 +4,7 @@ use std::time::Duration;
 use std::{sync::Arc, thread};
 use std::sync::Mutex;
 
-pub fn arc_test() {
+pub fn init() {
         // 1. Start with a string
     let woy_payload = String::from("Week of year:");
 
@@ -19,16 +19,17 @@ pub fn arc_test() {
     // Create the thread and use move to MOVE ownership of the variables to inside the thread.
     let thread_handle = thread::spawn(move || {
         let when = Duration::from_secs(5);
-        println!("inside of a thread");
+        println!("Inside Arc Thread");
         let mut counter = 0;
         loop {
-            println!("before sleep");
+            println!("Before sleep");
             sleep(when);
-            println!("after sleep");
+            println!("After sleep");
             counter = counter + 1;
             println!("counter = {:?}", counter);
              let mut updated_woy_updated = thread_shared_woy_payload.lock().unwrap();
              updated_woy_updated.push_str("Add this to the end");
+             //TODO: break the loop to handle the thread response
         }
     });
 
