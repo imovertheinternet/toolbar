@@ -39,8 +39,7 @@
 				"height": 150,
 				"resizable": false,
 				"skipTaskbar": true,
-				"title": "ControlOne Agent",
-				"transparent": true,
+				"title": "Some WIndow",
 				"visible": false,
 				"width": 292
 			}
