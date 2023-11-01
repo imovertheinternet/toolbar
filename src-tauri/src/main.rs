@@ -1,11 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use chrono::{Datelike, Local};
+use std::process::Command;
 use std::thread;
-use sysinfo::{System, SystemExt};
-use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, SystemTraySubmenu};
-mod channel_test;
+use sysinfo::{ProcessExt, System, SystemExt};
+use tauri::{
+    CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
+    SystemTraySubmenu,
+};
 mod arc_test;
+mod channel_test;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -45,15 +49,42 @@ fn add_a_thread() {
     });
 }
 
+/**
+ * Get a list of processes and PIDs by searching for them.
+ *
+ */
+fn begin_startup_script() {
+    let mut s = System::new();
+    s.refresh_processes();
+
+    for (pid, process) in s.processes() {
+        if process.name() == "ControlOne Agent" {
+            println!("found it, pid is {}", pid);
+            let kill_command = Command::new("kill").arg("-9").arg(pid.to_string()).output();
+            match kill_command {
+                Ok(value) => {
+                    println!("OKKKK {}", value.status);
+                }
+                Err(err) => {
+                    println!("ERRRRO {}", err);
+                }
+            }
+        }
+    }
+}
+
 fn menu_conrad() -> SystemTraySubmenu {
     let uptime_menu_item = CustomMenuItem::new("uptime".to_string(), "N/A");
     let week_of_year = CustomMenuItem::new("woy".to_string(), "N/A");
     let add_thread_menu_item = CustomMenuItem::new("add_thread".to_string(), "Add A Thread");
-    let menu_payload =  SystemTrayMenu::new()
-    .add_item(week_of_year)
-    .add_item(uptime_menu_item)
-    .add_item(add_thread_menu_item);
-    SystemTraySubmenu::new("Conrad",menu_payload)
+    let startup_menu_item =
+        CustomMenuItem::new("startup_script".to_string(), "Startup script init");
+    let menu_payload = SystemTrayMenu::new()
+        .add_item(week_of_year)
+        .add_item(uptime_menu_item)
+        .add_item(startup_menu_item)
+        .add_item(add_thread_menu_item);
+    SystemTraySubmenu::new("Conrad", menu_payload)
 }
 
 fn main() {
@@ -61,6 +92,8 @@ fn main() {
     // channel_test::init();
     //TODO: This is busted
     // arc_test::init();
+
+    // TODO: Have a script run that will do all the start tasks. Like start viscosity, nginx, kill creative cloud, c1 agent
 
     let hide = CustomMenuItem::new("hide".to_string(), "Hide");
     let tray_menu = SystemTrayMenu::new()
@@ -78,6 +111,9 @@ fn main() {
                 "add_thread" => {
                     println!("add thread clicked");
                     add_a_thread()
+                }
+                "startup_script" => {
+                    begin_startup_script();
                 }
                 _ => {}
             },
