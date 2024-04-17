@@ -11,6 +11,8 @@ use tauri::{
 mod arc_test;
 mod channel_test;
 
+use tauri_plugin_positioner::{Position, WindowExt};
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -50,13 +52,15 @@ fn add_a_thread() {
 }
 
 /**
- * Get a list of processes and PIDs by searching for them.
- *
+ * Personal init script 
+ * Start Viscosity, nginx
+ * Kill creative cloud, c1 agent
  */
 fn begin_startup_script() {
     let mut s = System::new();
     s.refresh_processes();
 
+    // Get a list of processes and PIDs by searching for them and kill c1
     for (pid, process) in s.processes() {
         if process.name() == "ControlOne Agent" {
             println!("found it, pid is {}", pid);
@@ -92,11 +96,8 @@ fn main() {
     // channel_test::init();
     //TODO: This is busted
     // arc_test::init();
-
-    // TODO: Have a script run that will do all the start tasks. Like start viscosity, nginx, kill creative cloud, c1 agent
-
     let hide = CustomMenuItem::new("hide".to_string(), "Hide");
-    let tray_menu = SystemTrayMenu::new()
+    let tray_menu: SystemTrayMenu = SystemTrayMenu::new()
         .add_submenu(menu_conrad())
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(hide);
@@ -104,9 +105,11 @@ fn main() {
     let tray = SystemTray::new().with_menu(tray_menu);
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_positioner::init())
         .system_tray(tray)
         .invoke_handler(tauri::generate_handler![greet, my_first_command])
         .on_system_tray_event(|app, event: SystemTrayEvent| match event {
+            // tauri_plugin_positioner::on_tray_event(app, &event);
             SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
                 "add_thread" => {
                     println!("add thread clicked");

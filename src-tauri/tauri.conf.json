@@ -31,17 +31,19 @@
 		"security": {
 			"csp": null
 		},
+		"macOSPrivateApi": true,
 		"windows": [
 			{
-				"alwaysOnTop": true,
+				"alwaysOnTop": false,
+				"transparent": true,
 				"decorations": false,
 				"fullscreen": false,
-				"height": 150,
-				"resizable": false,
+				"resizable": true,
 				"skipTaskbar": true,
 				"title": "Some WIndow",
-				"visible": false,
-				"width": 292
+				"visible": true,
+				"width": 800,
+				"height": 600
 			}
 		]
 	}
