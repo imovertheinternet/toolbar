@@ -41,7 +41,7 @@
 				"resizable": true,
 				"skipTaskbar": true,
 				"title": "Some WIndow",
-				"visible": true,
+				"visible": false,
 				"width": 800,
 				"height": 600
 			}
